@@ -1,4 +1,4 @@
-package util
+package db
 
 import (
 	"klubox/configs"
@@ -45,7 +45,7 @@ func NewMongoHandler() (*MongoHandler, error) {
 		return nil, err
 	}
 
-	log.Printf("INFO: Mongo DB successfully connected !! \n")
+	log.Printf("INFO: Mongo DB successfully connected \n")
 
 	defer session.Close()
 

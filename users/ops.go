@@ -3,25 +3,13 @@ package users
 import (
 	"golang.org/x/crypto/bcrypt"
 
+	"klubox/infrastructure/db"
 	"klubox/util"
 )
 
 // UserService is a default implementation of the user service.
 type UserService struct {
 	Repository UserRepository
-}
-
-func NewUserService() (UserService, error) {
-	mgo, err := util.NewMongoHandler()
-	if err != nil {
-		return UserService{}, err
-	}
-
-	return UserService{
-		Repository: UserRepository{
-			Db: mgo,
-		},
-	}, nil
 }
 
 // CreateUser is a user service method that returns a unique user by user ID.
@@ -41,7 +29,7 @@ func (service *UserService) GetUserByEmail(email string) (*User, error) {
 }
 
 //GetUserByID is a user service method for retrieving a user from the db.
-func (service *UserService) GetUserByID(id util.ID) (*User, error) {
+func (service *UserService) GetUserByID(id db.ID) (*User, error) {
 	return service.Repository.FindByID(id)
 }
 

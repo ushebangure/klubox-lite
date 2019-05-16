@@ -37,6 +37,18 @@ var (
 	// ErrMismatchingEmails in the service
 	ErrMismatchingEmails = errors.New("Invalid email provided for this user")
 
+	// ErrUnauthorized error
+	ErrUnauthorized = errors.New("Token is unauthorized")
+
+	// ErrNoPermissions error
+	ErrNoPermissions = errors.New("Not enough permissions")
+
+	// ErrExpired error
+	ErrExpired = errors.New("Token is expired")
+
+	// ErrNoTokenFound error
+	ErrNoTokenFound = errors.New("No token found")
+
 	/*------------------------- Domain Error Messages ------------------------*/
 	/*------------------------------------------------------------------------*/
 
