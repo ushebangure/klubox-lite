@@ -2,11 +2,11 @@ package users
 
 import (
 	"encoding/json"
-	"net/http"
-
 	"github.com/julienschmidt/httprouter"
 	"github.com/unrolled/render"
+	"net/http"
 
+	"klubox/infrastructure/db"
 	"klubox/util"
 )
 
@@ -17,7 +17,7 @@ type UserHandler struct {
 }
 
 func (handler *UserHandler) CheckAppHealth(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.Write([]byte("Healthy"))
+	handler.Formatter.JSON(w, http.StatusOK, Health{true})
 }
 
 // Create handles incoming requests for creating a new user
@@ -62,7 +62,7 @@ func (handler *UserHandler) GetUserByEmailOrByIDH(w http.ResponseWriter, req *ht
 		}
 	} else if validateID(emailOrID) {
 
-		uid := util.ID(emailOrID)
+		uid := db.ID(emailOrID)
 		user, err := handler.UserService.GetUserByID(uid)
 
 		if err != nil {
@@ -78,14 +78,14 @@ func (handler *UserHandler) GetUserByEmailOrByIDH(w http.ResponseWriter, req *ht
 // GetAllUsers handles the request for all users
 func (handler *UserHandler) GetAllUsers(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	var users []*User
-	ul, serviceErr := handler.UserService.GetAllUsers()
+	ul, err := handler.UserService.GetAllUsers()
 
 	for _, user := range ul {
 		users = append(users, user.hidePassword())
 	}
 
-	if serviceErr != nil {
-		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("1004", "Missing user privledges", serviceErr.Error()))
+	if err != nil {
+		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("1008", "Missing user privileges", err.Error()))
 	} else {
 		handler.Formatter.JSON(w, http.StatusOK, users)
 	}

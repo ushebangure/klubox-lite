@@ -5,12 +5,13 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
+	"klubox/infrastructure/db"
 	"klubox/util"
 )
 
 // UserRepositoryMgo is a Mongo DB implementation of the user repository
 type UserRepository struct {
-	Db util.DbHandler
+	Db db.DbHandler
 }
 
 // Save is a user repository method that creates a new user. Mongo Implementation of the user_repository interface.
@@ -27,7 +28,7 @@ func (repository *UserRepository) Save(user *User) (*User, error) {
 		return nil, util.ErrUserEmailExist
 	}
 
-	user.ID = util.NewID()
+	user.ID = db.NewID()
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
@@ -39,7 +40,7 @@ func (repository *UserRepository) Save(user *User) (*User, error) {
 }
 
 //FindByID - finds a user using the user's id
-func (repository *UserRepository) FindByID(id util.ID) (*User, error) {
+func (repository *UserRepository) FindByID(id db.ID) (*User, error) {
 	var userBuffer User
 
 	idHex := string(id)
@@ -74,7 +75,6 @@ func (repository *UserRepository) FindAll() ([]*User, error) {
 	collection := repository.Db.Query("users")
 
 	err := collection.Find(bson.M{}).
-
 		All(&usersBuffer)
 
 	if err != nil {

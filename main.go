@@ -2,18 +2,49 @@ package main
 
 import (
 	"flag"
+	"github.com/unrolled/render"
+
 	"log"
 	"net/http"
+
+	"klubox/infrastructure/db"
+	"klubox/infrastructure/registry"
+	"klubox/infrastructure/router"
 )
 
-var port = flag.String("http_address", "8080", "http port for all services")
+var (
+	port = flag.String("http_address", "8080", "http port for all services")
+
+	formatter = render.New(render.Options{
+		IndentJSON: true,
+	})
+)
 
 func main() {
-	routes := RegisterServiceRoutes()
+	mgo, err := db.NewMongoHandler()
+	if err != nil {
+		log.Fatal("Failed to start server", err)
+	}
 
-	log.Printf("Starting server powered by klubox-lite (c) On port: %v", *port)
+	handlers := registry.NewRegistry(mgo)
 
-	err := http.ListenAndServe(":"+*port, routes)
+	routes := router.RegisterServiceRoutes(handlers)
+
+	log.Printf(`Starting Server Powered By kluBox (c) On Port: %v
+
+    	..      ..                 ....
+    	..      ..                 ..   ..                                   .
+    	..      ..                 ..   ..                                 . . .
+    	..      ..                 .......                               .   .   .
+    	.....   ..    ..       ..  ...|         ....    ...  ...         .   .   .
+    	...     ..    ..       ..  .......    ..    ..    ....           . .   . .
+    	..      ..    ..       ..  ..   ..    ..    ..     ..            .       .
+    	...     ...    ..     ..   ..  ..      ..  ..     ....             .   .
+    	.....   .....    .. ..     ....          ..     ...  ...             .
+
+    `, *port)
+
+	err = http.ListenAndServe(":"+*port, router.NewRouter(routes))
 	if err != nil {
 		log.Fatal("Failed to start server", err)
 	}
