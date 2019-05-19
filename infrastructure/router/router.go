@@ -19,7 +19,7 @@ type Route struct {
 	Method      string
 	Path        string
 	HandlerFunc httprouter.Handle
-	Role        string
+	Protected   bool
 }
 
 type Routes []Route
@@ -43,19 +43,21 @@ func RegisterServiceRoutes(handlers *registry.Handlers) Routes {
 			Method:      "GET",
 			Path:        "/users/:emailOrID",
 			HandlerFunc: handlers.Users.GetUserByEmailOrByIDH,
+			Protected:   true,
 		},
 		{
 			Name:        "Get list of users",
 			Method:      "GET",
 			Path:        "/users",
-			HandlerFunc: handlers.Users.GetAllUsers,
-			Role:        "admin",
+			HandlerFunc: authenticator.IsAdmin(handlers.Users.GetAllUsers),
+			Protected:   true,
 		},
 		{
 			Name:        "Create user",
 			Method:      "POST",
 			Path:        "/users",
-			HandlerFunc: handlers.Users.Create,
+			HandlerFunc: authenticator.IsAdmin(handlers.Users.Create),
+			Protected:   true,
 		},
 	}
 }
@@ -68,12 +70,9 @@ func NewRouter(routes Routes) *httprouter.Router {
 		stack := mid.NewStack()
 		stack.Use(middleware.Logger)
 
-		if route.Role != "" {
+		if route.Protected {
 			stack.Use(authenticator.Auth())
 			stack.Use(authenticator.Authenticate)
-
-			// TODO(ubangure): Add switch case to handle more routes.
-			stack.Use(authenticator.Authorize)
 		}
 
 		router.Handle(route.Method, route.Path, stack.Wrap(route.HandlerFunc))

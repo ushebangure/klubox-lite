@@ -22,6 +22,7 @@ type User struct {
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password,omitempty"`
+	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -44,12 +45,12 @@ func (user *User) Validate() error {
 		return util.ErrEmailMissing
 	}
 
-	if user.Username == "" {
-		return util.ErrUsernameMissing
-	}
-
 	if user.Password == "" {
 		return util.ErrPasswordMissing
+	}
+
+	if user.Role != "" && !util.IsValidRole(user.Role) {
+		return util.ErrInvalidRole
 	}
 
 	return nil

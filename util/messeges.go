@@ -22,6 +22,8 @@ var (
 	// ErrPasswordMissing in the request body.
 	ErrPasswordMissing = errors.New("Required field 'password' is missing from the request body. Please check your documentation")
 
+	ErrInvalidRole = errors.New("Invalid 'role' provided. Please check your documentation")
+
 	// ErrInvalidQueryParams in the request body.
 	ErrInvalidQueryParams = errors.New("Invalid query param in the ids field. Please check your documentation")
 
