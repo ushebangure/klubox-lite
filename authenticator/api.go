@@ -21,6 +21,7 @@ var formatter = render.New(render.Options{
 // Authenticate is a authentication middleware
 func Authenticate(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		token, _, err := FromContext(r.Context())
 
 		if err != nil {

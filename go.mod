@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/felixge/httpsnoop v1.0.0 // indirect
+	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/juju/mgosession v1.0.0
 	github.com/julienschmidt/httprouter v1.2.0
