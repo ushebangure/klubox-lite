@@ -69,6 +69,7 @@ func NewRouter(routes Routes) *httprouter.Router {
 	for _, route := range routes {
 		stack := mid.NewStack()
 		stack.Use(middleware.Logger)
+		stack.Use(middleware.Cors)
 
 		if route.Protected {
 			stack.Use(authenticator.Auth())
