@@ -1,8 +1,11 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/julienschmidt/httprouter"
 	mid "github.com/rileyr/middleware"
+	"github.com/rs/cors"
 
 	"klubox/authenticator"
 	"klubox/infrastructure/middleware"
@@ -62,14 +65,13 @@ func RegisterServiceRoutes(handlers *registry.Handlers) Routes {
 	}
 }
 
-// NewRouter reads from the routes slice to translate to httprouter.Handle
-func NewRouter(routes Routes) *httprouter.Router {
+// NewRouter reads from the routes slice to translate to http.Handler
+func NewRouter(routes Routes) http.Handler {
 	router := httprouter.New()
 
 	for _, route := range routes {
 		stack := mid.NewStack()
 		stack.Use(middleware.Logger)
-		stack.Use(middleware.Cors)
 
 		if route.Protected {
 			stack.Use(authenticator.Auth())
@@ -79,5 +81,8 @@ func NewRouter(routes Routes) *httprouter.Router {
 		router.Handle(route.Method, route.Path, stack.Wrap(route.HandlerFunc))
 	}
 
-	return router
+	// TODO(ushe): Remove this wild card and only allow specific params before going live.
+	c := cors.AllowAll()
+
+	return c.Handler(router)
 }

@@ -44,6 +44,8 @@ func main() {
 
     `, *port)
 
+
+
 	err = http.ListenAndServe(":"+*port, router.NewRouter(routes))
 	if err != nil {
 		log.Fatal("Failed to start server", err)
