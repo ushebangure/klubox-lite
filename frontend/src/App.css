@@ -1,0 +1,145 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #3bb300;
+  min-height: 100vh;
+}
+/* Login coomponents */
+.Login {
+  text-align: left;
+  align-items: left;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 10px;
+  font-family: sans-serif;
+  color: white;
+}
+
+.LoginButton {
+  border-radius: 5px;
+  background-color: yellow;
+}
+
+.TextBox {
+  border-radius: 5px;
+  padding: 2px;
+  font-size: 10px;
+}
+
+.ReportType {
+  font-size: 10px
+}
+
+/* Navigation tab*/
+.TopNav {
+  background-color: lightblue;
+  display: flex;
+  flex-direction: row;
+  color: blue;
+  text-align: right;
+}
+
+.NavButton {
+  background-color: inherit;
+  padding-right: 100px;
+  border-style: hidden;
+}
+
+.LogoutButton {
+  align-items: left;
+  background-color: inherit;
+  padding-left: 600px;
+  border-style: hidden;
+}
+
+.TransListManage {
+  text-align: left;
+  align-items: right;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 10px;
+  color: black;
+  padding: 10px;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.GenerateButton {
+  background-color: yellow;
+  border-radius: 5px
+}
+
+.ListHeader {
+  color: white;
+  font-size: 20px;
+  font-family: serif;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.Transaction {
+  color: black;
+  text-align: left;
+  font-size: 10px;
+  padding-right: 40px;
+  font-family: sans-serif;
+}
+
+.ColumnTransact {
+  border-width: 3px;
+  border-bottom: solid;
+  border-bottom-color: red;
+  color: white;
+}
+
+.ColumnReciever {
+  border-width: 3px;
+  border-bottom: solid;
+  border-bottom-color: yellow;
+  color: white;
+}
+
+.ColumnSender {
+  border-width: 3px;
+  border-bottom: solid;
+  border-bottom-color: green;
+  color: white;
+}
+
+.ColumnStatus {
+  border-width: 3px;
+  border-bottom: solid;
+  border-bottom-color: black;
+  color: white;
+}
+
+.Welcome {
+  font-size: 15px;
+  font-variant: small-caps;
+}
+
+.
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
