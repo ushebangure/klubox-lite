@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"klubox/configs"
 	"net/http"
 	"strings"
 	"time"
@@ -74,7 +75,7 @@ func verifier(ja *JWTAuth) func(next httprouter.Handle) httprouter.Handle {
 
 // Auth klubox-lite custom implementation
 func Auth() func(next httprouter.Handle) httprouter.Handle {
-	var ja = New("HS256", []byte("secret"), nil)
+	var ja = New("HS256", []byte(configs.JWT_SECRET), nil)
 	return verifier(ja)
 }
 

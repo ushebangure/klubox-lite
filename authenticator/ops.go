@@ -1,6 +1,7 @@
 package authenticator
 
 import (
+	"klubox/configs"
 	"klubox/util"
 	"time"
 
@@ -31,12 +32,12 @@ func (service *AuthService) CheckCredentials(credentials *Credentials) (string, 
 		return "", util.ErrInvalidPassword
 	}
 
-	var signingKey = []byte("secret")
+	var signingKey = []byte(configs.JWT_SECRET)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"uid": user.ID,
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
-		"iup": []string{"admin"},
+		"iup": []string{user.Role},
 	})
 
 	tokenString, err := token.SignedString(signingKey)

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"github.com/unrolled/render"
-
 	"klubox/util"
 	"net/http"
 )
@@ -15,15 +14,14 @@ type AuthHandler struct {
 	Formatter    *render.Render
 }
 
-// Authenticate is a authentication middleware to enforce access from the
-// Auth middleware request context values.
+var formatter = render.New(render.Options{
+	IndentJSON: true,
+})
+
+// Authenticate is a authentication middleware
 func Authenticate(next httprouter.Handle) httprouter.Handle {
-
-	var formatter = render.New(render.Options{
-		IndentJSON: true,
-	})
-
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		token, _, err := FromContext(r.Context())
 
 		if err != nil {
@@ -38,7 +36,49 @@ func Authenticate(next httprouter.Handle) httprouter.Handle {
 			return
 		}
 
-		// Token is authenticated, pass it through
+		next(w, r, ps)
+	}
+}
+
+func authorize(permissions []string, w http.ResponseWriter, r *http.Request) bool {
+	token, _, _ := FromContext(r.Context())
+
+	claims := NewClaims(token)
+	if !claims.HasPermissions(permissions, false) {
+		formatter.JSON(w, http.StatusUnauthorized, util.NewError("2001",
+			" Unuthothorised API request.", util.ErrNoPermissions.Error()))
+		return false
+	}
+
+	return true
+}
+
+func IsAdmin(next httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		if !authorize(util.Admin(), w, r) {
+			return
+		}
+
+		next(w, r, ps)
+	}
+}
+
+func IsAgent(next httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		if !authorize(util.Agent(), w, r) {
+			return
+		}
+
+		next(w, r, ps)
+	}
+}
+
+func IsPayout(next httprouter.Handle) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		if !authorize(util.Payout(), w, r) {
+			return
+		}
+
 		next(w, r, ps)
 	}
 }

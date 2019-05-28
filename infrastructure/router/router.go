@@ -1,8 +1,11 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/julienschmidt/httprouter"
 	mid "github.com/rileyr/middleware"
+	"github.com/rs/cors"
 
 	"klubox/authenticator"
 	"klubox/infrastructure/middleware"
@@ -19,7 +22,7 @@ type Route struct {
 	Method      string
 	Path        string
 	HandlerFunc httprouter.Handle
-	Role        string
+	Protected   bool
 }
 
 type Routes []Route
@@ -43,41 +46,43 @@ func RegisterServiceRoutes(handlers *registry.Handlers) Routes {
 			Method:      "GET",
 			Path:        "/users/:emailOrID",
 			HandlerFunc: handlers.Users.GetUserByEmailOrByIDH,
+			Protected:   true,
 		},
 		{
 			Name:        "Get list of users",
 			Method:      "GET",
 			Path:        "/users",
-			HandlerFunc: handlers.Users.GetAllUsers,
-			Role:        "admin",
+			HandlerFunc: authenticator.IsAdmin(handlers.Users.GetAllUsers),
+			Protected:   true,
 		},
 		{
 			Name:        "Create user",
 			Method:      "POST",
 			Path:        "/users",
-			HandlerFunc: handlers.Users.Create,
+			HandlerFunc: authenticator.IsAdmin(handlers.Users.Create),
+			Protected:   true,
 		},
 	}
 }
 
-// NewRouter reads from the routes slice to translate to httprouter.Handle
-func NewRouter(routes Routes) *httprouter.Router {
+// NewRouter reads from the routes slice to translate to http.Handler
+func NewRouter(routes Routes) http.Handler {
 	router := httprouter.New()
 
 	for _, route := range routes {
 		stack := mid.NewStack()
 		stack.Use(middleware.Logger)
 
-		if route.Role != "" {
+		if route.Protected {
 			stack.Use(authenticator.Auth())
 			stack.Use(authenticator.Authenticate)
-
-			// TODO(ubangure): Add switch case to handle more routes.
-			stack.Use(authenticator.Authorize)
 		}
 
 		router.Handle(route.Method, route.Path, stack.Wrap(route.HandlerFunc))
 	}
 
-	return router
+	// TODO(ushe): Remove this wild card and only allow specific params before going live.
+	c := cors.AllowAll()
+
+	return c.Handler(router)
 }

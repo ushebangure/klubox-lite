@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: google/cloud-sdk:alpine
+    steps:
+      - checkout
+      - setup_docker_engine
+      - run:
+          name: Install Tools
+          command: |
+            apk add -U docker openssl gettext
+            cd /bin
+            wget -qO- https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/linux/amd64/kubectl > kubectl
+            chmod +x kubectl
+      - run:
+          name: Build Image
+          command: docker build -t eu.gcr.io/gothic-calling-235621/klubox:build-${CIRCLE_BUILD_NUM} .
+      - run:
+          name: Push Image
+          command: |
+            cat .circleci/gcloud.json | docker login -u _json_key --password-stdin https://eu.gcr.io
+            docker push eu.gcr.io/gothic-calling-235621/klubox:build-${CIRCLE_BUILD_NUM}
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            gcloud auth activate-service-account --key-file=.circleci/gcloud.json
+            gcloud config set project ${PROJECT_ID}
+            gcloud config set compute/zone ${COMPUTE_ZONE}
+            gcloud container clusters get-credentials ${CLUSTER_NAME}
+      - run:
+          name: Deploy to Kubernetes
+          command: |
+            envsubst < run/manifest.yaml > ${HOME}/patched_k8s.yaml
+            kubectl apply -f ${HOME}/patched_k8s.yaml
+            kubectl rollout status deployment/${PROJECT_NAME} --watch
