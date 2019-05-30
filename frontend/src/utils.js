@@ -1,7 +1,4 @@
 // Utility functions for the components
-import { URL } from "./config";
-import { Cookies } from "react-cookie";
-
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const validateEmail = email =>
@@ -98,5 +95,8 @@ export const printReceipt = (name, id, sender, amount, currency, ref, sentDate) 
 
 // Method for validating transaction
 export const validateTransaction = trans => {
-  
+  if (Object.values(trans).indexOf('') > -1) {
+    return true
+  }
+  return false
 }

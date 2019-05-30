@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
-import { validatePhoneNumber } from '../config'
+import { URL } from '../config'
+import { validatePhoneNumber, validateTransaction } from '../utils'
 
 export class Transact extends React.Component {
   componentDidMount() {
@@ -47,13 +48,19 @@ export class Transact extends React.Component {
 
   createTransaction = () => {
     var create = confirm('Create transaction')
-    if (create === true) {
+
+    if (create === true && validateTransaction(this.state)) {
       axios({
         baseUrl: `${URL}/transactions/create`,
         method: 'post',
         headers: {'token', this.token},
         data: {
-          transaction: transaction
+          transaction: this.state
+        }
+      })
+      .then(response => {
+        if (response.status === 201) {
+          
         }
       })
     }
