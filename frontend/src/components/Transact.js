@@ -3,7 +3,8 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { URL } from '../config'
-import { validatePhoneNumber, validateTransaction } from '../utils'
+import { validatePhoneNumber, getTransactionFromState } from '../utils'
+import { FormError } from '/Error'
 
 export class Transact extends React.Component {
   componentDidMount() {
@@ -33,7 +34,10 @@ export class Transact extends React.Component {
     totalToPay: '',
     charges: '',
     currencyToSend: '',
-    currencyForPayment: ''
+    currencyForPayment: '',
+    error: '',
+    errorRecPhoneNumber: '',
+    errorSenPhoneNumber: ''
   }
 
   handleInput =  (e) => {
@@ -42,16 +46,43 @@ export class Transact extends React.Component {
     })
   }
 
-  handlePhoneNumber = (e) => {
-    if (validatePhoneNumber(e.target.value)) {
-      handleInput(e)
-    }
-  }
-
   createTransaction = () => {
+    if (!validatePhoneNumber(this.state.receiverPhoneNumber)) {
+      this.setState({
+        errorRecPhoneNumber: 'Invalid phone number'
+      })
+      return
+    } else {
+      this.setState({
+        errorRecPhoneNumber: ''
+      })
+    }
+    if (!validatePhoneNumber(this.state.receiverPhoneNumber)) {
+      this.setState({
+        errorSenPhoneNumber: 'Invalid phone number'
+      })
+      return
+    } else {
+      this.setState({
+        errorSenPhoneNumber: ''
+      })
+    }
+
+    const transaction = getTransactionFromState(this.state)
+
+    if (!transaction) {
+      this.setState({
+        error: 'Empty field'
+      })
+      return
+    } else {
+      this.setState({
+        error: ''
+      })
+    }
     var create = confirm('Create transaction')
 
-    if (create === true && validateTransaction(this.state)) {
+    if (create === true) {
       axios({
         baseUrl: `${URL}/transactions/create`,
         method: 'post',
@@ -95,22 +126,67 @@ export class Transact extends React.Component {
       <div>
         <div>
           <h3>Receiver</h3>
-          Gender: M <input type="select" name="receiverGender" value="male" onChange={handleInput} />
-        F <input type="radio" name="receiverGender" value="female" onChange={handleInput} />
-         <br />
-        Name: <input type="text" name="receiverName" onChange={handleInput} /> <br />
-      Surname: <input type="text" name="receiverSurname" onChange={handleInput} /> <br />
-    Id No. <input type="text" name="receiverId" onChange={handleInput} /> <br />
-  Phone No. <input type="text" name="receiverPhoneNumber" onChange={handlePhoneNumber />
+          <tr>
+            <td>Gender</td>
+            <td>
+              <div>
+                <input type="select" name="receiverGender" value="male" onChange={handleInput} />
+                <input type="radio" name="receiverGender" value="female" onChange={handleInput} />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td>
+              <input type="text" name="receiverName" onChange={handleInput} />
+            </td>
+          </tr>
+          <tr>
+            <td>Surname</td>
+            <td>
+              <input type="text" name="receiverSurname" onChange={handleInput} />
+            </td>
+          </tr>
+          <tr>
+            <td>Id No.</td>
+            <td>
+              <input type="text" name="receiverId" onChange={handleInput} />
+            </td>
+          </tr>
+          <tr>
+            <td>Phone No.</td>
+            <td>
+              <input type="text" name="receiverPhoneNumber" onChange={handleInput />
+            </td>
+          </tr>
+          {this.state.errorRecPhoneNumber && <FormError error={this.state.errorRecPhoneNumber} />}
         </div>
         <div>
           <h3>Sender</h3>
-            Gender: M <input type="select" name="senderGender" value="male" onChange={handleInput} />
-          F <input type="select" name="senderGender" value="female" onChange={handleInput} />
-           <br />
-          Name <input type="text" name="senderName" onChange={handleInput} /> <br />
-        Surname <input type="text" name="senderSurname" onChange={handleInput} /> <br />
-      Phone No. <input type="text" name="senderPhoneNumber" onChange={handlePhoneNumber />
+          <tr>
+            <td>Gender</td>
+            <td>
+              <div>
+                <input type="select" name="senderGender" value="male" onChange={handleInput} />
+                <input type="select" name="senderGender" value="female" onChange={handleInput} />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td>
+               <input type="text" name="senderName" onChange={handleInput} />
+            </td>
+          </tr>
+          <tr>
+            <td>Surname</td>
+            <td><input type="text" name="senderSurname" onChange={handleInput} /></td>
+          </tr>
+          <tr>
+            <td>Phone No.</td>
+            <td><input type="text" name="senderPhoneNumber" onChange={handleInput} /></td>
+          </tr>
+          {this.state.errorSenPhoneNumber && <FormError error={this.state.errorSenPhoneNumber} />}
         </div>
         <div>
           <h3>Transaction Details</h3>
@@ -133,7 +209,7 @@ export class Transact extends React.Component {
             <td>Currency To Send</td>
             <td>
               <div>
-                {currencyOptions(currencyToSend)}
+                {currencyOptions("currencyToSend")}
               </div>
             </td>
           </tr>
@@ -147,7 +223,7 @@ export class Transact extends React.Component {
             <td>Payment Currency</td>
             <td>
               <div>
-                {currencyOptions(currencyForPayment)}
+                {currencyOptions("currencyForPayment")}
               </div>
             </td>
           </tr>
@@ -174,6 +250,7 @@ export class Transact extends React.Component {
                 }
                 >Create</button>
             </td>
+            {this.state.error && <FormError error={this.state.error} />}
           </tr>
         </div>
       </div>

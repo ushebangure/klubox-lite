@@ -25,7 +25,7 @@ class Login extends React.Component {
         <form className="Login" method="POST">
           <label>
             <i>Email:</i><br />
-            <input className="TextBox" type="email" name="email" placeholder="email@klu.org"onChange={this.handleUserInput} />
+            <input className="TextBox" type="email" name="email" placeholder="email@klu.org" onChange={this.handleUserInput} />
           </label>
           <br />
           <label>

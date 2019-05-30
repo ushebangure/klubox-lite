@@ -93,10 +93,80 @@ export const printReceipt = (name, id, sender, amount, currency, ref, sentDate) 
 
 }
 
-// Method for validating transaction
-export const validateTransaction = trans => {
-  if (Object.values(trans).indexOf('') > -1) {
-    return true
+// Method for extracting transaction
+export const getTransactionFromState = trans => {
+  const transaction = {}
+
+  if (trans.receiverGender) {
+    transaction.receiverGender = trans.receiverGender
+  } else {
+    return null
   }
-  return false
+  if (trans.receiverId) {
+    transaction.receiverId = trans.receiverId
+  } else {
+    return null
+  }
+  if (trans.receiverName) {
+    transaction.receiverName = trans.receiverName
+  } else {
+    return null
+  }
+  if (trans.receiverPhoneNumber) {
+    transaction.receiverPhoneNumber = trans.receiverPhoneNumber
+  } else {
+    return null
+  }
+  if (trans.receiverSurname) {
+    transaction.receiverSurname = trans.receiverSurname
+  } else {
+    return null
+  }
+  if (trans.senderName) {
+    transaction.senderName = trans.senderName
+  } else {
+    return null
+  }
+  if (trans.senderSurname) {
+    transaction.senderSurname = trans.senderSurname
+  } else {
+    return null
+  }
+  if (trans.senderPhoneNumber) {
+    transaction.senderPhoneNumber = trans.senderPhoneNumber
+  } else {
+    return null
+  }
+  if (trans.senderGender) {
+    transaction.senderGender = trans.senderGender
+  } else {
+    return null
+  }
+  if (trans.amount) {
+    transaction.amount = trans.amount
+  } else {
+    return null
+  }
+  if (trans.totalToPay) {
+    transaction.totalToPay = trans.totalToPay
+  } else {
+    return null
+  }
+  if (trans.charges) {
+    transaction.charges = trans.charges
+  } else {
+    return null
+  }
+  if (trans.currencyToSend) {
+    transaction.currencyToSend = trans.currencyToSend
+  } else {
+    return null
+  }
+  if (trans.currencyForPayment) {
+    transaction.currencyForPayment = trans.currencyForPayment
+  } else {
+    return null
+  }
+
+  return transaction
 }

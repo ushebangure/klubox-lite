@@ -10,9 +10,10 @@ export class Payout extends React.Component {
     const token = getToken()
     if (!token) {
       this.props.history.push('/')
+    } else {
+      this.token = token
+      this.transaction = {}
     }
-    this.token = token
-    this.transaction = {}
   }
 
   state = {
@@ -83,7 +84,7 @@ export class Payout extends React.Component {
           this.state.tranRef &&
           this.state.displayPrint
         ) {
-          return   <PayoutTemplate
+          return <PayoutTemplate
                         name={this.transaction.name}
                         senderName={this.transaction.sender}
                         id={this.transaction.receiverId}
