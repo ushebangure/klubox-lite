@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { URL } from '../config'
 import { validatePhoneNumber, validateTransaction } from '../utils'
 
@@ -60,8 +62,18 @@ export class Transact extends React.Component {
       })
       .then(response => {
         if (response.status === 201) {
-          
+          return toast.success("Transaction successful", {
+            position: toast.POSITION.BOTTOM_LEFT
+          })
         }
+        return toast.error("Transaction not successful", {
+          position: toast.POSITION.BOTTOM_LEFT
+        })
+      })
+      .catch(err => {
+        return toast.error("Error in sending transaction", {
+          position: toast.POSITION.BOTTOM_LEFT
+        })
       })
     }
   }
