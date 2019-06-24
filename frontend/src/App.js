@@ -8,6 +8,8 @@ import { TransactionList } from './components/TransactionList'
 import Login from './components/Login'
 import { createBrowserHistory } from 'history'
 import { Router, Route, Switch } from 'react-router-dom'
+import { Transact } from './components/Transact'
+import { PayoutTemplate } from './components/PayoutTemplate'
 
 toast.configure()
 const history = createBrowserHistory()
@@ -21,8 +23,8 @@ class App extends React.Component {
     return (
       <Router history={history}>
         <Switch>
-          <Route exact path='/' component={Welcome} />
-          <Route path='/dashboard' component={DashBoard} />
+          <Route exact path='/' component={Login} />
+          <Route path='/dashboard' component={PayoutTemplate} />
         </Switch>
       </Router>
     );

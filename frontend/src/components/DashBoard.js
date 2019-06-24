@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from 'react-router'
 import { Body } from "./Body"
-import { getActiveTab } from "../utils"
+import { getActiveTab, logout } from "../utils"
 
 class DashBoard extends React.Component {
   componentDidMount() {
@@ -39,7 +39,8 @@ class DashBoard extends React.Component {
             }
               name="transactions" onClick={this.changeTab}>
             View Transactions
-          </button>)}
+          </button>)
+        }
         {
           this.permissions.transact && (
             <button className="NavButton" style={
@@ -71,7 +72,7 @@ class DashBoard extends React.Component {
                 name="logout"
                 className="LogoutButton"
                 onClick={() => {
-                  //// TODO: method for logging out
+                  logout()
                 }}
               >
                 logout

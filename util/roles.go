@@ -22,11 +22,13 @@ var roleStrings = []string{
 	"payout",
 }
 
-func IsValidRole(role string) bool {
+func IsValidRole(roles []string) bool {
 	for _, r := range roleStrings {
-		if role == r {
-			return true
-		}
+		for _, u := range roles {
+			if u == r {
+				return true
+			}
+		}	
 	}
 
 	return false

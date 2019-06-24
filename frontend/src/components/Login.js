@@ -48,7 +48,7 @@ class Login extends React.Component {
                   })
                   .then((response) => {
                     if (
-                      response.status === 201 &&
+                      response.status === 200 &&
                       response.data &&
                       response.data.token
                     ) {
@@ -63,6 +63,7 @@ class Login extends React.Component {
                       }
                       this.setState({password: ''})
                       storeCookie(token)
+                      storeAgentId(user.ID)
                       this.props.history.push(location)
                     }
                   }).catch(err => {

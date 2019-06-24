@@ -62,6 +62,97 @@ func RegisterServiceRoutes(handlers *registry.Handlers) Routes {
 			HandlerFunc: authenticator.IsAdmin(handlers.Users.Create),
 			Protected:   true,
 		},
+		{
+			Name:					"Get Currencies",
+			Method:				"GET",
+			Path:					"/currencies",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Currencies.GetCurrenciesH),
+			Protected:		true
+		},
+		{
+			Name:					"Add Currency",
+			Method:				"POST",
+			Path:					"/currencies",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Currencies.AddCurrencyH),
+			Protected:		true
+		},
+		{
+			Name:					"Update Currencies",
+			Method:				"PUT",
+			Path:					"/currencies/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Currencies.UpdateCurrencyH),
+			Protected:		true
+		},
+		{
+			Name:					"Remove Currency",
+			Method:				"DELETE",
+			Path:					"/currencies/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Currencies.RemoveCurrencyH),
+			Protected:		true
+		},
+		{
+			Name:					"Get Locations",
+			Method:				"GET",
+			Path:					"/locations",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Locations.GetLocationsH),
+			Protected:		true
+		},
+		{
+			Name:					"Add Location",
+			Method:				"POST",
+			Path:					"/locations",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Locations.AddLocationH),
+			Protected:		true
+		},
+		{
+			Name:					"Remove Location",
+			Method:				"DELETE",
+			Path:					"/locations",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Locations.RemoveLocationH),
+			Protected:		true
+		},
+		{
+			Name:					"Add Transaction",
+			Method:				"POST",
+			Path:					"/transactions",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.AddTransactionH),
+			Protected:		true
+		},
+		{
+			Name:					"Get Transactions",
+			Method:				"GET",
+			Path:					"/transactions",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.GetTransactionsUsingFiltersH),
+			Protected:		true
+		},
+		{
+			Name:					"Get Agent Transactions",
+			Method:				"GET",
+			Path:					"/agent/transactions/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.GetAgentTransactionsH),
+			Protected:		true
+		},
+		{
+			Name:					"Get Agent Payouts",
+			Method:				"GET",
+			Path:					"/agent/payouts/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.GetAgentPayoutsH),
+			Protected:		true
+		},
+		{
+			Name:					"Complete Transaction Payout",
+			Method:				"PUT",
+			Path:					"/transactions/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.CompletePayoutH),
+			Protected:		true
+		},
+		{
+			Name:					"Get Transaction for Payout",
+			Method:				"GET",
+			Path:					"/transactions/:id",
+			HandlerFunc:	authenticator.IsAdmin(handlers.Transactions.GetTransactionByRefH),
+			Protected:		true
+		}
 	}
 }
 

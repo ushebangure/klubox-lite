@@ -66,6 +66,13 @@
   padding: 10px;
 }
 
+.TransactionSearch {
+  border-radius: 5px;
+  background-color: green;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -133,7 +140,90 @@
   font-variant: small-caps;
 }
 
-.
+/* Transact component styles */
+.Transact {
+  display: flex;
+  flex-direction: row;
+  height: 20%;
+}
+
+.TransactSender {
+  padding: 10px;
+  border: solid;
+  border-left: none;
+  border-width: thin;
+  border-radius: 15px;
+  width: 50%
+}
+
+.TransactReceiver {
+  padding: 10px;
+  border: solid;
+  border-width: thin;
+  border-radius: 15px;
+  width: 50%;
+  height: 30%;
+}
+
+.TransactDetails {
+  border: solid;
+  border-width: thin;
+  border-radius: 15px;
+  align-items: center;
+  width: 50%;
+  padding-left: 10px;
+}
+
+.TransactRow {
+  height: auto;
+  padding: 5px;
+  width: 50%;
+}
+
+.TransactButton {
+  border-radius: 5px;
+  background-color: purple;
+}
+
+.td {
+  padding-left: 10%;
+  padding-bottom: 1%;
+  font-size: 10px;
+  width: 50%;
+  height: 50%;
+  border-radius: 20px;
+}
+
+/*  The payout*/
+.Payout {
+  justify-content: right;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+}
+
+.PayoutTemplate {
+  justify-content: flex-start;
+}
+
+.td1 {
+  padding-left: 10%;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  font-style: normal;
+  font-weight: bold;
+  width: 50%;
+}
+
+.PrintButton {
+  border-radius: 5px;
+  background-color: red;
+}
+
+.PayoutButton {
+  border-radius: 5px;
+  background-color: red;
+}
 
 @keyframes App-logo-spin {
   from {

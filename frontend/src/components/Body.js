@@ -1,5 +1,6 @@
 import React from "react";
-import { TransactionList } from "./TransactionList";
+import { TransactionList } from "./TransactionList"
+import { Transact } from './Transact'
 
 export class Body extends React.Component {
   state = {
@@ -10,6 +11,7 @@ export class Body extends React.Component {
     return (
       <div>
         {(this.state.active === 'transactions') && <TransactionList />}
+        {(this.state.active === 'transact') && <Transact />}
       </div>
     );
   }

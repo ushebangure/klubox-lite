@@ -56,12 +56,16 @@ export class TransactionListManagementTab extends React.Component {
             }}
           />
         &nbsp; to &nbsp;
-          <DatePicker
-            selected={this.state.toDate}
-            onChange={(date) => {
-              this.handleInput(date, 'toDate')
-            }}
-          />
+        <DatePicker
+          selected={this.state.toDate}
+          onChange={(date) => {
+            this.handleInput(date, 'toDate')
+          }}
+        />
+      <button
+        className="TransactionSearch"
+        onClick={this.props.search}
+      >Search</button>  
         <div className="ReportType">
           Report Type:
           <div>
