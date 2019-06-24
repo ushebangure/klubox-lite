@@ -10,8 +10,8 @@ import (
 	"klubox/util"
 )
 
-// TransactionDetails is a struct representing a transaction
-type TransactionDetails struct {
+// Transaction is a struct representing a transaction
+type Transaction struct {
 	ID               db.ID     `json:"id"`
 	AgentInID				 db.ID 		 `json:"agentInId"`
 	AgentOutID			 db.ID 		 `json:"agentOutId"`
