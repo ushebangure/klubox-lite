@@ -22,6 +22,7 @@ var (
 	// ErrPasswordMissing in the request body.
 	ErrPasswordMissing = errors.New("Required field 'password' is missing from the request body. Please check your documentation")
 
+	// ErrInvalidRole in the request body.
 	ErrInvalidRole = errors.New("Invalid 'role' provided. Please check your documentation")
 
 	// ErrInvalidQueryParams in the request body.
@@ -87,85 +88,85 @@ var (
 	ErrCurrencyExists = errors.New("Currency already exists")
 
 	//ErrDBError - database error
-	ErrDBError = error.New("Database error")
+	ErrDBError = errors.New("Database error")
 
 	//ErrCurrencyNotCreated - error currency not created
-	ErrCurrencyNotCreated = error.New("Currency could not be created")
+	ErrCurrencyNotCreated = errors.New("Currency could not be created")
 
 	//ErrNoCurrenciesFound - error no currencies found
-	ErrNoCurrenciesFound = error.New("No currencies found")
+	ErrNoCurrenciesFound = errors.New("No currencies found")
 
 	//ErrCurrencyDoesNotExist - currency does not exist
-	ErrCurrencyDoesNotExist = error.New("Currency to be deleted does not exist")
+	ErrCurrencyDoesNotExist = errors.New("Currency to be deleted does not exist")
 
 	//ErrCurrencyDeleteFail - error currency could not be deleted
-	ErrCurrencyDeleteFail = error.New("Currency could not be deleted")
+	ErrCurrencyDeleteFail = errors.New("Currency could not be deleted")
 
 	//ErrCurrencyUpdateFailure - error currency update failed
-	ErrCurrencyUpdateFailure = error.New("Currency could not be updated")
+	ErrCurrencyUpdateFailure = errors.New("Currency could not be updated")
 
-	//ErrCanotGetCurrencies - error coulf not get currencies
-	ErrCannotGetCurrencies = error.New("Could not get currencies")
+	//ErrCannotGetCurrencies - error coulf not get currencies
+	ErrCannotGetCurrencies = errors.New("Could not get currencies")
 
 	// ErrCurrencyNameMissing - error validation - currency name missing
-	ErrCurrencyNameMissing = error.New("Validation error: currency name missing")
+	ErrCurrencyNameMissing = errors.New("Validation error: currency name missing")
 
 	// ErrCurrencyValueFalsy - validation error - value not valid
-	ErrCurrencyValueFalsy = error.New("Validation error: currency value is not valid")
+	ErrCurrencyValueFalsy = errors.New("Validation error: currency value is not valid")
 
 	/*
 		Location service errors
 	*/
 
 	// ErrLocationNameMissing - validation error - location name missing
-	ErrLocationNameMissing = error.New("Validation error - name missing")
+	ErrLocationNameMissing = errors.New("Validation error - name missing")
 
 	// ErrLocationNotAdded - location not added
-	ErrLocationNotAdded = error.New("Location not added")
+	ErrLocationNotAdded = errors.New("Location not added")
 
 	// ErrLocationDoesNotExist - error location does not exist
-	ErrLocationDoesNotExist = error.New("Location to be deleted does not exist")
+	ErrLocationDoesNotExist = errors.New("Location to be deleted does not exist")
 
 	// ErrLocationNotDeleted - error locatin not deleted
-	ErrLocationNotDeleted = error.New("Location not deleted")
+	ErrLocationNotDeleted = errors.New("Location not deleted")
 
 	/*
 		Transaction service errors
 	*/
 
 	// ErrTransactionInvalidSender - error invalid sender
-	ErrTransactionInvalidSender = error.New("Transaction sender object not valid")
+	ErrTransactionInvalidSender = errors.New("Transaction sender object not valid")
 
-	// ErrTransactionInvalidReceiver
-	ErrTransactionInvalidReceiver = error.New("Transaction receiver object not valid")
+	// ErrTransactionInvalidReceiver - error invalid receiver
+	ErrTransactionInvalidReceiver = errors.New("Transaction receiver object not valid")
 
 	// ErrTransactionInvalidCurrency - invalid currency supplied
-	ErrTransactionInvalidCurrency = error.New("Transaction currencies are invalid")
+	ErrTransactionInvalidCurrency = errors.New("Transaction currencies are invalid")
 
 	// ErrTransactionInvalidAmount - invalid total to pay or amount to send
-	ErrTransactionInvalidAmount = error.New("Transaction amount to send or total to pay is invalid")
+	ErrTransactionInvalidAmount = errors.New("Transaction amount to send or total to pay is invalid")
 
 	// ErrTransactionAgentIdMissing - invalid agent id supplied
-	ErrTransactionAgentIdMissing = error.New("Transaction agent id is invalid")
+	ErrTransactionAgentIdMissing = errors.New("Transaction agent id is invalid")
 
 	// ErrTransactionRefExists - error transaction ref exists
-	ErrTransactionRefExists = error.New("Transaction ref already exists")
+	ErrTransactionRefExists = errors.New("Transaction ref already exists")
 
 	// ErrTransactionInsertFail - error transaction could not be recorded
-	ErrTransactionInsertFail = error.New("Transaction could not be recorded")
+	ErrTransactionInsertFail = errors.New("Transaction could not be recorded")
 
 	// ErrTransactionDoesNotExist - error transaction does not exist
-	ErrTransactionDoesNotExist = error.New("Transaction does not exist")
+	ErrTransactionDoesNotExist = errors.New("Transaction does not exist")
 
 	// ErrTransactionAgentIdInvalid - error transaction id not valid
-	ErrTransactionAgentIdInvalid = error.New("Transaction agent id is not valid")
+	ErrTransactionAgentIdInvalid = errors.New("Transaction agent id is not valid")
 
 	// ErrTransactionIdInvalid - error transaction id is not valid
-	ErrTransactionIdInvalid = error.New("Transaction id is invalid")
+	ErrTransactionIdInvalid = errors.New("Transaction id is invalid")
 
 	// ErrTransactionCompleted -error transaction already completed
-	ErrTransactionCompleted = error.New("Payout already done")
+	ErrTransactionCompleted = errors.New("Payout already done")
 
 	// ErrTransactionRetrieveFail - error payout already done
-	ErrTransactionRetrieveFail = error.New("Transaction retrieval failed")
+	ErrTransactionRetrieveFail = errors.New("Transaction retrieval failed")
 )

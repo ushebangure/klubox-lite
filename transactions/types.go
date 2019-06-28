@@ -1,8 +1,8 @@
 package transactions
 
 import (
-	"time"
 	"strconv"
+	"time"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -13,8 +13,8 @@ import (
 // TransactionDetails is a struct representing a transaction
 type TransactionDetails struct {
 	ID               db.ID     `json:"id"`
-	AgentInID				 db.ID 		 `json:"agentInId"`
-	AgentOutID			 db.ID 		 `json:"agentOutId"`
+	AgentInID        db.ID     `json:"agentInId"`
+	AgentOutID       db.ID     `json:"agentOutId"`
 	Sender           Customer  `json:"sender"`
 	Receiver         Customer  `json:"receiver"`
 	ReferenceNumber  string    `json:"referenceNumber"`
@@ -53,7 +53,6 @@ type Address struct {
 }
 
 // Validate Transaction
-
 func (trans *Transaction) Validate() error {
 	if trans.Sender.Name == "" {
 		return util.ErrTransactionInvalidSender
@@ -104,7 +103,6 @@ func (trans *Transaction) Validate() error {
 	return nil
 }
 
-// Validate the id
 func validateID(id string) bool {
-  return bson.IsObjectIdHex(id)
+	return bson.IsObjectIdHex(id)
 }
