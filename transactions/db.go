@@ -17,6 +17,7 @@ type TransactionRepository struct {
 
 // Save is a method for saving a transaction in the repo
 func (repo *TransactionRepository) Save(trans *Transaction) (*Transaction, error) {
+	// TODO(brad): Use err, don't number the err1, err2 e.t.c
 	if err1 := trans.Validate(); err1 != nil {
 		return err1
 	}
@@ -59,12 +60,14 @@ func (repo *TransactionRepository) FindAll() ([]*Transaction, error) {
 // FindByFilters - method for getting transactions using filters - dateRange and filter
 func (repo *TransactionRepository) FindByFilters(filter string, dateTo *time.Time, dateFrom *time.Time) ([]*Transaction, error) {
 	collection := repo.Db.Query("transactions")
+	// TODO(brad): Define this once and add to the list as you collect. Look into using variadic options looks something like this, ( ...) or just append the list
 	var transactions []*Transaction
 	var transactions1 []*Transaction
 	var transactions2 []*Transaction
 	var transactions3 []*Transaction
 	var transactions4 []*Transaction
 
+	// TODO(brad): Fail fast, check for if filter == "" { return early } then continue with the below
 	if filter != "" {
 		query := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "sender.Name": {"$regex": filter}}
 
@@ -72,6 +75,7 @@ func (repo *TransactionRepository) FindByFilters(filter string, dateTo *time.Tim
 			return nil, err
 		}
 
+		// TODO(brad): Don't increment again, reuse query
 		query1 := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "sender.Surname": {"$regex": filter}}
 
 		if err1 := collection.Find(query1).All(&transactions1); err1 != nil {
@@ -102,6 +106,7 @@ func (repo *TransactionRepository) FindByFilters(filter string, dateTo *time.Tim
 			return nil, err4
 		}
 
+		// TODO(brad): lol, I see you used a variadic here, tie this in with my comment above
 		transactions = append(transactions, transactions4...)
 	} else {
 		query := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}}
@@ -152,6 +157,7 @@ func (repo *TransactionRepository) FindAgentTransactions(id string) ([]*Transact
 
 	collection := repo.Db.Query("transactions")
 
+	// TODO(brad): Sweet, this is how you should do all your checks, fail fast then continue if the logic is valid
 	if validateID(id) != true {
 		return nil, util.ErrTransactionAgentIdInvalid
 	}
