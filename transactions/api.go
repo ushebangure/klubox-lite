@@ -11,6 +11,15 @@ import (
 	"klubox/util"
 )
 
+/*
+TODO(brad): (1) General comments for this file, don't increment err variables, reuse err
+			(2) Try use this format the format below instead of `if err := json.NewDecoder(req); err := nil {}
+				`err := json.NewDecoder(req)
+				 if err != nil {
+				 	// handle error
+				 }`
+*/
+
 // TransactionHandler is a transaction handler struct
 type TransactionHandler struct {
 	TransService TransactionService
@@ -37,20 +46,30 @@ func (handler *TransactionHandler) AddTransactionH(w http.ResponseWriter, req ht
 		return
 	}
 
+<<<<<<< HEAD
 	if err := payload.Validate(); err != nil {
+=======
+	// TODO(brad): Don't increment the err variable, reuse err not change it to err1, err2 e.t.c
+	if err1 := payload.Validate(); err1 != nil {
+>>>>>>> 55044d2f43bbe7bfae778a534f931a3ed154a2fb
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4002",
 			"Unable to validate the transaction payload provided.", err.Error()))
 		return
 	}
 
+<<<<<<< HEAD
 	transaction, err := handler.TransService.AddTransaction(payload)
 
 	if err != nil {
+=======
+	// TODO(brad): Same as above with the err variable, remember the scope is only valid within the if braces (e.g. {})
+	if transaction, err2 := handler.TransService.AddTransaction(payload); err2 != nil {
+>>>>>>> 55044d2f43bbe7bfae778a534f931a3ed154a2fb
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4003",
 			"Unable to add transaction.", err.Error()))
 		return
 	}
-
+	// TODO(brad): `transactions` will be invalid here because it's scope is in the if {} block, take it out and check err separately as suggested at the beginning of this file
 	handler.Formatter.JSON(w, http.StatusCreated, transaction)
 }
 
@@ -70,7 +89,7 @@ func (handler *TransactionHandler) GetTransactionsUsingFiltersH(w http.ResponseW
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4004", "Transactions' retrieval failed", err.Error()))
 		return
 	}
-
+	// TODO(brad): `transactions` will be invalid here because it's scope is in the if {} block, take it out and check err separately as suggested at the beginning of this file
 	handler.Formatter.JSON(w, http.StatusOK, transactions)
 }
 
@@ -78,6 +97,8 @@ func (handler *TransactionHandler) GetTransactionsUsingFiltersH(w http.ResponseW
 func (handler *TransactionHandler) GetAgentTransactionsH(w http.ResponseWriter, req http.Request, params httprouter.Params) {
 	id := params.ByName("id")
 
+	// TODO(brad): What happens when it's not a valide ID? Case doesn't seem to be handled out side the if statement
+	// Rather fail early by checking `if !validateID(id) { // Throw error }` then continue with the rest of the checks if valid
 	if validateID(id) {
 		transactions, err := handler.TransService.GetAgentTransactions(id)
 
@@ -85,7 +106,7 @@ func (handler *TransactionHandler) GetAgentTransactionsH(w http.ResponseWriter, 
 			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4005", "Could not get agent's transactions", err.Error()))
 			return
 		}
-
+		// TODO(brad): `transactions` will be invalid here because it's scope is in the if {} block, take it out and check err separately as suggested at the beginning of this file
 		handler.Formatter.JSON(w, http.StatusAccepted, transactions)
 		return
 	}
@@ -95,6 +116,7 @@ func (handler *TransactionHandler) GetAgentTransactionsH(w http.ResponseWriter, 
 func (handler *TransactionHandler) GetAgentPayoutsH(w http.ResponseWriter, req http.Request, params httprouter.Params) {
 	id := params.ByName("id")
 
+	// TODO(brad): Same as the above with an invalid ID
 	if validateID(id) {
 		transactions, err := handler.TransService.GetAgentPayouts(id)
 
@@ -102,7 +124,7 @@ func (handler *TransactionHandler) GetAgentPayoutsH(w http.ResponseWriter, req h
 			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4006", "Could not get agent's payouts", err.Error()))
 			return
 		}
-
+		// TODO(brad): `transactions` will be invalid here because it's scope is in the if {} block, take it out and check err separately as suggested at the beginning of this file
 		handler.Formatter.JSON(w, http.StatusAccepted, transactions)
 		return
 	}
@@ -111,6 +133,7 @@ func (handler *TransactionHandler) GetAgentPayoutsH(w http.ResponseWriter, req h
 // CompletePayoutH is a method for completing a payout, it updates the transaction status to completed
 func (handler *TransactionHandler) CompletePayoutH(w http.ResponseWriter, req http.Request, params httprouter.Params) {
 	id := params.ByName("id")
+	// TODO(brad): This needs to be &agentId{} not *agentId{}
 	payload := *agentId{}
 
 	if err := json.NewDecoder(req.Body).Decode(payload); err != nil {
@@ -119,6 +142,7 @@ func (handler *TransactionHandler) CompletePayoutH(w http.ResponseWriter, req ht
 		return
 	}
 
+	// TODO(brad): Fail early again and check for `if !validateID(id) {} || !validateID(payload)` and throw error
 	if validateID(id) && validateID(payload.id) {
 		transactions, err := handler.TransService.CompletePayout(id)
 
@@ -126,7 +150,7 @@ func (handler *TransactionHandler) CompletePayoutH(w http.ResponseWriter, req ht
 			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4006", "Could not get agent's payouts", err.Error()))
 			return
 		}
-
+		// TODO(brad): `transactions` will be invalid here because it's scope is in the if {} block, take it out and check err separately as suggested at the beginning of this file
 		handler.Formatter.JSON(w, http.StatusAccepted, transactions)
 		return
 	}
