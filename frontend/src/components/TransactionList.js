@@ -17,6 +17,7 @@ export class TransactionList extends React.Component {
     } else {
       this.token = token
     }
+    getTransactions()
   }
 
   state = {
@@ -35,14 +36,7 @@ export class TransactionList extends React.Component {
 
   };
 
-  search = () => {
-    if (this.state.toDate.getTime() <= this.state.fromDate.getTime()) {
-      this.setState({
-        error: 'Invalid time range'
-      })
-      return
-    }
-
+  getTransactions = () => {
     axios({
       baseUrl: `${URL}/transactions`,
       method: 'get',
@@ -56,11 +50,11 @@ export class TransactionList extends React.Component {
         if (response.status === 200) {
           if (
             response.data &&
-            Array.isArray(response.data)
+            Array.isArray(response.data.transactions)
           ) {
             this.setState({
               error: '',
-              transactions: response.data
+              transactions: response.data.transactions
             })
           }
         } else {
@@ -77,6 +71,16 @@ export class TransactionList extends React.Component {
     })
   }
 
+  search = () => {
+    if (this.state.toDate.getTime() <= this.state.fromDate.getTime()) {
+      this.setState({
+        error: 'Invalid time range'
+      })
+      return
+    }
+    getTransactions()
+  }
+
   render() {
     return (
       <div>
@@ -90,25 +94,25 @@ export class TransactionList extends React.Component {
         {this.state.error && <FormError error={this.state.error} />}
         {this.state.transactions.slice(
           (this.state.page -1)*10,
-          (this.state.page*10 < this.transactions.length ? this.state.page*10 : this.state.transactions.length)
+          (this.state.page*10 < this.state.transactions.length ? this.state.page*10 : this.state.transactions.length)
         ).map(trans =>
            <Transaction
-            created={trans.date.transact}
-            ref={trans.ref}
-            collectionMethod={trans.collectionMethod}
-            amtRecvd={trans.amountSent}
-            totalCharge={trans.totalCharge}
-            totalPaid={trans.totalPaid}
-            rcverName={trans.receiverName}
-            rcverPhone={trans.receiverPhone}
-            rcverId={trans.receiverId}
-            senderName={trans.senderName}
-            senderPhone={trans.senderPhone}
-            status={trans.status}
+            created={trans.CreatedAt}
+            ref={trans.ReferenceNumber}
+            collectionMethod={trans.CollectionMethod}
+            amtRecvd={`${trans.CurrencyToSend} ${trans.AmountToSend}`}
+            totalCharge={`${trans.CurrencyToPay} ${trans.Charges}`}
+            totalPaid={`${trans.CurrencyToPay} ${trans.TotalToPay}`}
+            rcverName={trans.Receiver.Name}
+            rcverPhone={trans.Receiver.Phone}
+            rcverId={trans.Receiver.ID}
+            senderName={trans.Sender.Name}
+            senderPhone={trans.Sender.Phone}
+            status={trans.Status}
           />
         )}
-    </div>
 
+    </div>
     );
   }
 }

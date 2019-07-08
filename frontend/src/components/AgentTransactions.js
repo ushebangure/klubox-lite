@@ -72,25 +72,25 @@ export class AgentTransactions extends React.Component {
     const id = e.target.id
 
     axios({
-      baseUrl: `${URL}/transactions/agents/${id}`,
+      baseUrl: `${URL}/agent/transactions/${id}`,
       method: 'get',
       headers: { 'token': this.token }
     })
     .then(response => {
-      if (response.status === 200 &&
-        Array.isArray(response.data.transactions),
-        response.data.transacations.length > 0
-       ) {
-        this.setState({
-          transactions: response.data.transactions,
-          displayTransactions: true,
-          errorMsg: ''
+      if (response.status === 200 ) {
+        const response = JSON.parse(response.data.transactions)
+        if (Array.isArray(response) && response.length > 0) {
+          this.setState({
+            transactions: response,
+            displayTransactions: true,
+            errorMsg: ''
         })
-      } else {
-        this.setState({
-          errorMsg: 'No transactions found',
-          displayTransactions: false
-        })
+        } else {
+          this.setState({
+            errorMsg: 'No transactions found',
+            displayTransactions: false
+          })
+        }
       }
     })
     .catch(err => this.setState({
@@ -195,7 +195,7 @@ export class AgentTransactions extends React.Component {
               <ListGroupItem>
                 <InputGroup id="search">
                     <InputGroupAddon addOnType="append">
-                      <Button color="primary" onClick={this.getAgents}></Button>
+                      <Button color="primary" onClick={this.getAgents}>Get</Button>
                     </InputGroupAddon>
                     <Input placeholder="search agent" onChange={e => {
                       this.setState({

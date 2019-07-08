@@ -24,7 +24,8 @@ export class PayoutTemplate extends React.Component {
               axios({
                 baseUrl: `${URL}/transactions/${this.props.transRef}`,
                 method: 'put',
-                headers: {'token': this.props.token}
+                headers: {'token': this.props.token},
+                data: {id: this.id}
               }).then(response => {
                 if (
                   response &&
@@ -81,7 +82,7 @@ export class PayoutTemplate extends React.Component {
            </tr>
            <tr className="TransactRow">
              <td className="td1">ID No:</td>
-             <td className="td1">{this.props.id}</td>
+             <td className="td1">{this.props.receiverId}</td>
            </tr>
            <tr className="TransactRow">
              <td className="td1">Sender:</td>

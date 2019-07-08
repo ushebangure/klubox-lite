@@ -15,7 +15,6 @@ export class Payout extends React.Component {
     } else {
       this.token = token
       this.id = id
-      this.transaction = {}
     }
   }
 
@@ -23,7 +22,7 @@ export class Payout extends React.Component {
     transRef: '',
     error: '',
     displayPrint: false
-    transaction: {}
+    transaction: ''
   }
 
   handleInput =  (e) => {
@@ -46,13 +45,14 @@ export class Payout extends React.Component {
         response.data.transaction
       ) {
         if (validateTransaction(response.data.transaction)) {
-          this.state.transaction = response.data.transaction
           this.setState({
+            transaction: response.data.transaction,
             error: ''
           })
         } else {
           this.setState({
-            error: 'Invalid transaction'
+            error: 'Invalid transaction',
+            transaction: '',
           })
         }
       }
@@ -79,7 +79,8 @@ export class Payout extends React.Component {
                  })
               } catch (e) {
                 this.setState({
-                  error: `Error: could not get transaction`
+                  error: `Error: could not get transaction`,
+                  displayPrint: false
                 })
               }
             }
@@ -88,17 +89,21 @@ export class Payout extends React.Component {
         {
           (
             this.state.tranRef &&
-            this.transaction
+            this.state.transaction &&
             this.state.displayPrint
           ) &&
           <PayoutTemplate
-            name={this.transaction.name}
-            senderName={this.transaction.sender}
-            id={this.transaction.receiverId}
-            amount={this.transaction.amount}
-            currency={this.transaction.currency}
-            pickUpLocation={this.transaction.location}
-            status={this.transaction.status}
+            agentId={this.id}
+            transRef={this.state.transaction.ReferenceNumber}
+            senderName={`${this.state.transaction.Sender.Name} ${this.state.transaction.Sender.Surname}`}
+            receiverId={this.state.transaction.Receiver.ID}
+            amount={this.state.transaction.AmountToSend}
+            currency={this.state.transaction.CurrencyToSend}
+            pickUpLocation={this.state.transaction.PickLocation.Name}
+            status={this.state.transaction.Status}
+            receiverName={this.state.transaction.Receiver.Name}
+            receiverSurname={this.state.transaction.Receiver.Surname}
+            receiverPhoneNumber={this.state.transaction.Receiver.Phone}
             token={this.token}
           />
         }

@@ -11,7 +11,9 @@ type TransactionService struct {
 
 // AddTransaction is a service method for adding a transaction
 func (transService *TransactionService) AddTransaction(trans *Transaction) (*Transaction, error) {
-	if transaction, err := transService.Repo.Save(trans); err != nil {
+	transaction, err := transService.Repo.Save(trans)
+
+	if err != nil {
 		return nil, err
 	}
 	return transaction, nil
@@ -19,7 +21,9 @@ func (transService *TransactionService) AddTransaction(trans *Transaction) (*Tra
 
 // GetTransactions is a method for retrieving the transactions
 func (transService *TransactionService) GetAllTransactions() ([]*Transaction, error) {
-	if transactions, err := transService.Repo.FindAll(); err != nil {
+	transactions, err := transService.Repo.FindAll()
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -28,7 +32,9 @@ func (transService *TransactionService) GetAllTransactions() ([]*Transaction, er
 
 // GetTransactionsUsingFilters is a method for getting users using the filters name and date range
 func (transService *TransactionService) GetTransactionsUsingFilters(filter string, dateFrom time.Time, dateTo time.Time) ([]*Transaction, error) {
-	if transactions, err := transService.Repo.FindByFilters(filter, dateFrom, dateTo); err != nil {
+	transactions, err := transService.Repo.FindByFilters(filter, dateFrom, dateTo)
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -37,7 +43,9 @@ func (transService *TransactionService) GetTransactionsUsingFilters(filter strin
 
 // GetAgentTransactions - is a service method for getting an agent's transactions
 func (transService *TransactionService) GetAgentTransactions(id string) ([]*Transaction, error) {
-	if transactions, err := transService.Repo.FindAgentTransactions(id); err != nil {
+	transactions, err := transService.Repo.FindAgentTransactions(id)
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -46,7 +54,9 @@ func (transService *TransactionService) GetAgentTransactions(id string) ([]*Tran
 
 // GetAgentPayouts - is a service method for getting an agent's payouts
 func (transService *TransactionService) GetAgentPayouts(id string) ([]*Transaction, error) {
-	if transactions, err := transService.Repo.FindAgentPayouts(id); err != nil {
+	transactions, err := transService.Repo.FindAgentPayouts(id);
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -64,7 +74,9 @@ func (transService *TransactionService) UpdateTransaction(id string, agentId str
 
 // GetTransactionByRef - is a service method for a getting a transaction for payout
 func (transService *TransactionService) GetTransactionByRef(ref string) (*Transaction, error) {
-	if trans, err := transService.Repo.GetTransactionByRef(ref); er != nil {
+	trans, err := transService.Repo.GetTransactionByRef(ref)
+	
+	if err != nil {
 		return nil, err
 	}
 

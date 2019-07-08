@@ -65,7 +65,7 @@ export class TransactionListManagementTab extends React.Component {
       <button
         className="TransactionSearch"
         onClick={this.props.search}
-      >Search</button>  
+      >Search</button>
         <div className="ReportType">
           Report Type:
           <div>

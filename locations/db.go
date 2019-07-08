@@ -27,8 +27,8 @@ func (repo *LocationRepository) Save(location *Location) (*Location, error) {
 
 	location.ID = db.NewID()
 
-	if err1 := collection.Insert(location); err1 != nil {
-		return nil, err1
+	if err := collection.Insert(location); err != nil {
+		return nil, err
 	}
 
 	return location, nil
@@ -39,9 +39,7 @@ func (repo *LocationRepository) FindAll() ([]*Location, error) {
 	var locations []*Location
 	collection := repo.Db.Query("locations")
 
-	err := collection.FindAll(bson.M{}).All(&locations)
-
-	if err != nil {
+	if err := collection.FindAll(bson.M{}).All(&locations); err != nil {
 		return nil, err
 	}
 
@@ -64,7 +62,7 @@ func (repo *LocationRepository) DeleteLocation(id string) error {
 		return util.ErrLocationDoesNotExist
 	}
 
-	err := collection.Remove(query)
+	err = collection.Remove(query)
 
 	if err != nil {
 		return err

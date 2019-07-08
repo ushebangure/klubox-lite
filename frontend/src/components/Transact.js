@@ -24,14 +24,42 @@ export class Transact extends React.Component {
       this.token = token
       this.id = id
     }
-    // Get currencies from backend
-    this.currencies = {'ZAR': 10, 'USD': 13}
+    const currencies = getCurrencies()
+    const locations = getLocations()
+    this.setState({
+      locations: locations,
+      currencies: currencies
+    })
   }
+
   constructor() {
     super()
-    //this.token = "EFMVKSDSmdldmsl"
-    this.currencies = ['ZAR', 'USD']
-    this.locations = ['Harare', 'Bulawayo']
+    this.state = {
+      currencies: [],
+      locations: [],
+      receiverGender: '',
+      receiverId: '',
+      receiverName: '',
+      receiverPhoneNumber: '',
+      receiverSurname: '',
+      senderName: '',
+      senderPhoneNumber: '',
+      senderGender: '',
+      senderSurname: '',
+      amount: 0,
+      reference: '',
+      totalToPay: 0,
+      charges: '',
+      currencyToSend: '',
+      currencyForPayment: '',
+      error: '',
+      errorRecPhoneNumber: '',
+      errorSenPhoneNumber: '',
+      collectionMethod: '',
+      displayTotalInput: true,
+      displayAmountInput: true,
+      location: ''
+    }
 
     this.handleInput = this.handleInput.bind(this)
     this.currencyOptions = this.currencyOptions.bind(this)
@@ -41,31 +69,6 @@ export class Transact extends React.Component {
     this.amountToSendInput = this.amountToSendInput.bind(this)
     this.handleSendInput = this.handleSendInput.bind(this)
     this.handlePaymentInput = this.handlePaymentInput.bind(this)
-  }
-
-  state = {
-    receiverGender: '',
-    receiverId: '',
-    receiverName: '',
-    receiverPhoneNumber: '',
-    receiverSurname: '',
-    senderName: '',
-    senderPhoneNumber: '',
-    senderGender: '',
-    senderSurname: '',
-    amount: 0,
-    reference: '',
-    totalToPay: 0,
-    charges: '',
-    currencyToSend: '',
-    currencyForPayment: '',
-    error: '',
-    errorRecPhoneNumber: '',
-    errorSenPhoneNumber: '',
-    collectionMethod: '',
-    displayTotalInput: true,
-    displayAmountInput: true,
-    location: ''
   }
 
   handleInput =  (e) => {
@@ -100,7 +103,7 @@ export class Transact extends React.Component {
       if (!this.state.currencyToPay || !this.state.currencyToSend) {
         this.setState({error: 'Enter the currency'})
       } else {
-        const totalToPay = changeCurrency(this.currencies, e.target.value, this.state.currencyToSend, this.state.currencyToPay)
+        const totalToPay = changeCurrency(this.state.currencies, e.target.value, this.state.currencyToSend, this.state.currencyToPay)
         this.setState({
           totalToPay: totalToPay
         })
@@ -128,7 +131,7 @@ export class Transact extends React.Component {
       if (!this.state.currencyToPay || !this.state.currencyToSend) {
         this.setState({error: 'Enter the currency'})
       } else {
-        const amount = changeCurrency(this.currencies, e.target.value, this.state.currencyToPay, this.state.currencyToSend)
+        const amount = changeCurrency(this.state.currencies, e.target.value, this.state.currencyToPay, this.state.currencyToSend)
         this.setState({
           amount: amount
         })
@@ -230,9 +233,65 @@ export class Transact extends React.Component {
     }
   }
 
+  getCurrencies = () => {
+    axios({
+      baseUrl: `${URL}/currencies`,
+      method: 'get',
+      headers: {token: this.token},
+    })
+    .then(response => {
+      if (response.status === 200) {
+        this.setState({
+          currencies: response.data.currencies
+        })
+        return
+      } else {
+        this.setState({
+          currencies: response.data.currencies
+        })
+        return toast.error("Error in getting currencies", {
+          position: toast.POSITION.BOTTOM_LEFT
+        })
+      }
+    })
+    .catch(err => {
+      return toast.error(`Error in getting currencies: ${err.message}`, {
+        position: toast.POSITION.BOTTOM_LEFT
+      })
+    })
+  }
+
+  getLocations = () => {
+    axios({
+      baseUrl: `${URL}/locations`,
+      method: 'get',
+      headers: {token: this.token}
+    })
+    .then(response => {
+      if (response.status === 200) {
+        this.setState({
+          currencies: response.data.locations
+        })
+        return
+      } else {
+        this.setState({
+          locations: response.data.locations
+        })
+        return toast.error("Error in getting locations", {
+          position: toast.POSITION.BOTTOM_LEFT
+        })
+      }
+    })
+    .catch(err => {
+      return toast.error(`Error in getting locations: ${err.message}`, {
+        position: toast.POSITION.BOTTOM_LEFT
+      })
+    })
+  }
+
   currencyOptions = () => {
     const currs = []
-    Object.keys(this.currencies).map(curr => {
+    Object.keys(this.state.currencies).map(curr => {
       currs.push({'value': curr, 'label': curr})
     })
     return currs
@@ -240,8 +299,8 @@ export class Transact extends React.Component {
 
   locationOptions = () => {
     const locations = []
-    this.locations.map(location =>
-      locations.push({'value': location, 'label': location})
+    this.state.locations.map(location =>
+      locations.push({'value': location.Name, 'label': location.Name})
     )
     return locations
   }
@@ -348,7 +407,7 @@ export class Transact extends React.Component {
             <td className="td">Currency To Send</td>
             <td className="td">
               <Select
-                options={this.currencyOptions()}
+                options={this.state.currencies.length > 0 ? this.currencyOptions() : []}
                 onChange={(values) => {
                   this.setState({
                     currencyToSend: values[0],
@@ -363,7 +422,7 @@ export class Transact extends React.Component {
             <td className="td">Payment Currency</td>
             <td className="td">
               <Select
-                options={this.currencyOptions()}
+                options={this.state.currencies.length > 0 ? this.currencyOptions() : []}
                 onChange={(values) => {
                   this.setState({
                     currencyToPay: values[0],
@@ -394,7 +453,7 @@ export class Transact extends React.Component {
             <td className="td">Pickup Location</td>
             <td className="td">
               <Select
-                options={this.locationOptions()}
+                options={this.state.locations.length > 0 ? this.locationOptions(), []}
                 onChange={(values) => {
                   this.setState({
                     location: values[0],

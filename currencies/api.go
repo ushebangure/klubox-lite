@@ -26,17 +26,17 @@ func (handler *CurrencyHandler) AddCurrencyH(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	if err1 := payload.Validate(); err1 != nil {
+	if err := payload.Validate(); err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("2002",
-			"Unable to validate the currency payload provided.", err1.Error()))
+			"Unable to validate the currency payload provided.", err.Error()))
 		return
 	}
 
-	currency, err2 := handler.UserService.CreateUser(payload)
+	currency, err := handler.UserService.CreateUser(payload)
 
-	if err2 != nil {
+	if err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("2003",
-			"Unable to add currency.", err2.Error()))
+			"Unable to add currency.", err.Error()))
 		return
 	}
 
@@ -84,9 +84,9 @@ func (handler *CurrencyHandler) UpdateCurrencyH(w http.ResponseWriter, req *http
 	}
 
 	if validateID(id) {
-		curr, err1 := handler.CurrService.UpdateCurrency(id, payload)
-		if err1 != nil {
-			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("2007", "Could not remove currency", err1.Error()))
+		curr, err := handler.CurrService.UpdateCurrency(id, payload)
+		if err != nil {
+			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("2007", "Could not remove currency", err.Error()))
 			return
 		}
 

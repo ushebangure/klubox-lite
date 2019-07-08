@@ -17,8 +17,8 @@ type TransactionRepository struct {
 
 // Save is a method for saving a transaction in the repo
 func (repo *TransactionRepository) Save(trans *Transaction) (*Transaction, error) {
-	if err1 := trans.Validate(); err1 != nil {
-		return err1
+	if err := trans.Validate(); err != nil {
+		return err
 	}
 
 	collection := repo.Db.Query("transactions")
@@ -29,7 +29,9 @@ func (repo *TransactionRepository) Save(trans *Transaction) (*Transaction, error
 	trans.CreatedAt = time.Now()
 	trans.UpdatedAt = time.Now()
 
-	if count, err := collection.Find(query).Count(); err != nil {
+	count, err := collection.Find(query).Count();
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -37,8 +39,8 @@ func (repo *TransactionRepository) Save(trans *Transaction) (*Transaction, error
 		return nil, util.ErrTransactionRefExists
 	}
 
-	if err2 = collection.Insert(trans); err2 != nil {
-		return nil, err2
+	if err := collection.Insert(trans); err != nil {
+		return nil, err
 	}
 
 	return trans, nil
@@ -60,54 +62,54 @@ func (repo *TransactionRepository) FindAll() ([]*Transaction, error) {
 func (repo *TransactionRepository) FindByFilters(filter string, dateTo *time.Time, dateFrom *time.Time) ([]*Transaction, error) {
 	collection := repo.Db.Query("transactions")
 	var transactions []*Transaction
-	var transactions1 []*Transaction
-	var transactions2 []*Transaction
-	var transactions3 []*Transaction
-	var transactions4 []*Transaction
+	var buffer []*Transaction
+	var buffer []*Transaction
+	var buffer []*Transaction
+	var buffer []*Transaction
 
 	if filter != "" {
 		query := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "sender.Name": {"$regex": filter}}
 
-		if err := collection.Find(query).All(&transactions); err != nil {
+		if err := collection.Find(query).All(&buffer); err != nil {
 			return nil, err
 		}
 
-		query1 := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "sender.Surname": {"$regex": filter}}
+		query = bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "sender.Surname": {"$regex": filter}}
 
-		if err1 := collection.Find(query1).All(&transactions1); err1 != nil {
-			return nil, err1
+		if err := collection.Find(query).All(&buffer); err != nil {
+			return nil, err
 		}
 
-		transactions = append(transactions, transactions1...)
+		transactions = append(transactions, buffer...)
 
-		query2 = bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "receiver.Name": {"$regex": filter}}
+		query = bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "receiver.Name": {"$regex": filter}}
 
-		if err2 := collection.Find(query2).All(&transactions2); err2 != nil {
-			return nil, err2
+		if err := collection.Find(query).All(&buffer); err != nil {
+			return nil, err
 		}
 
-		transactions = append(transactions, transactions2...)
+		transactions = append(transactions, buffer...)
 
-		query3 := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "receiver.Surname": {"$regex": filter}}
+		query = bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "receiver.Surname": {"$regex": filter}}
 
-		if err3 := collection.Find(query3).All(&transactions3); err3 != nil {
-			return nil, err3
+		if err := collection.Find(query).All(&buffer); err != nil {
+			return nil, err
 		}
 
-		transactions = append(transactions, transactions3...)
+		transactions = append(transactions, buffer...)
 
-		query4 := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "referenceNumber": {"$regex": filter}}
+		query = bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}, "referenceNumber": {"$regex": filter}}
 
-		if err4 := collection.Find(query4).All(&transactions4); err4 != nil {
-			return nil, err4
+		if err := collection.Find(query).All(&buffer); err != nil {
+			return nil, err
 		}
 
-		transactions = append(transactions, transactions4...)
+		transactions = append(transactions, buffer...)
 	} else {
 		query := bson.M{"created": {"$gte": dateFrom, "$lte": dateFrom}}
 
-		if err5 := collection.Find(query).All(&transactions); err5 != nil {
-			return nil, err5
+		if err := collection.Find(query).All(&transactions); err != nil {
+			return nil, err
 		}
 	}
 
@@ -137,8 +139,8 @@ func (repo *TransactionRepository) UpdateTransaction(id string, agentId string) 
 		trans.UpdatedAt = time.Now()
 		trans.Status = "Completed"
 
-		if err2 := collection.Update(bson.M{"id": id}, trans); err2 != nil {
-			return err2
+		if err := collection.Update(bson.M{"id": id}, trans); err != nil {
+			return err
 		}
 
 		return nil

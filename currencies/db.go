@@ -27,7 +27,7 @@ func (repo *CurrencyRepository) Save(curr *Currency) (*Currency, error) {
 
 	curr.ID = db.NewID()
 
-	if err1 := collection.Insert(curr); err != nil {
+	if err := collection.Insert(curr); err != nil {
 		return nil, err
 	}
 

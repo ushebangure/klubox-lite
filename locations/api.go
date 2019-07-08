@@ -26,17 +26,17 @@ func (handler *LocationHandler) AddLocationH(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	if err1 := payload.Validate(); err1 != nil {
+	if err := payload.Validate(); err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("3002",
-			"Unable to validate the location payload provided.", err1.Error()))
+			"Unable to validate the location payload provided.", err.Error()))
 		return
 	}
 
-	location, err2 := handler.LocService.AddLocation(payload)
+	location, err := handler.LocService.AddLocation(payload)
 
-	if err2 != nil {
+	if err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("3003",
-			"Unable to add location.", err2.Error()))
+			"Unable to add location.", err.Error()))
 		return
 	}
 

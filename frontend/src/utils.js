@@ -119,25 +119,25 @@ export const validateTransaction = (trans) => {
   if (!trans.ref) {
     return null
   }
-  if (!trans.status) {
+  if (!trans.Status) {
     return null
   }
-  if (!trans.receiverName) {
+  if (!trans.Receiver.Name) {
     return null
   }
-  if (!trans.receiverSurname) {
+  if (!trans.Receiver.Surname) {
     return null
   }
-  if (!trans.receiverId) {
+  if (!trans.Receiver.ID) {
     return null
   }
-  if (!trans.senderName) {
+  if (!trans.Sender.Name) {
     return null
   }
-  if (!trans.receiverPhoneNumber) {
+  if (!trans.Receiver.Phone) {
     return null
   }
-  if (!trans.senderPhoneNumber) {
+  if (!trans.Sender.Phone) {
     return null
   }
   if (!trans.senderSurname) {

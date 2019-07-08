@@ -37,15 +37,17 @@ func (handler *TransactionHandler) AddTransactionH(w http.ResponseWriter, req ht
 		return
 	}
 
-	if err1 := payload.Validate(); err1 != nil {
+	if err := payload.Validate(); err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4002",
-			"Unable to validate the transaction payload provided.", err1.Error()))
+			"Unable to validate the transaction payload provided.", err.Error()))
 		return
 	}
 
-	if transaction, err2 := handler.TransService.AddTransaction(payload); err2 != nil {
+	transaction, err := handler.TransService.AddTransaction(payload)
+
+	if err != nil {
 		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4003",
-			"Unable to add transaction.", err2.Error()))
+			"Unable to add transaction.", err.Error()))
 		return
 	}
 
@@ -62,8 +64,10 @@ func (handler *TransactionHandler) GetTransactionsUsingFiltersH(w http.ResponseW
 		return
 	}
 
-	if transactions, err1 := handler.TransService.GetTransactionsUsingFilters(payload.filter, payload.dateFrom, payload.dateTo); err1 != nil {
-		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4004", "Transactions' retrieval failed", err1.Error()))
+	transactions, err := handler.TransService.GetTransactionsUsingFilters(payload.filter, payload.dateFrom, payload.dateTo)
+
+	if err != nil {
+		handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4004", "Transactions' retrieval failed", err.Error()))
 		return
 	}
 
@@ -75,7 +79,9 @@ func (handler *TransactionHandler) GetAgentTransactionsH(w http.ResponseWriter, 
 	id := params.ByName("id")
 
 	if validateID(id) {
-		if transactions, err := handler.TransService.GetAgentTransactions(id); err != nil {
+		transactions, err := handler.TransService.GetAgentTransactions(id)
+
+		if err != nil {
 			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4005", "Could not get agent's transactions", err.Error()))
 			return
 		}
@@ -90,7 +96,9 @@ func (handler *TransactionHandler) GetAgentPayoutsH(w http.ResponseWriter, req h
 	id := params.ByName("id")
 
 	if validateID(id) {
-		if transactions, err := handler.TransService.GetAgentPayouts(id); err != nil {
+		transactions, err := handler.TransService.GetAgentPayouts(id)
+
+		if err != nil {
 			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4006", "Could not get agent's payouts", err.Error()))
 			return
 		}
@@ -112,8 +120,10 @@ func (handler *TransactionHandler) CompletePayoutH(w http.ResponseWriter, req ht
 	}
 
 	if validateID(id) && validateID(payload.id) {
-		if transactions, err1 := handler.TransService.CompletePayout(id); err1 != nil {
-			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4006", "Could not get agent's payouts", err1.Error()))
+		transactions, err := handler.TransService.CompletePayout(id)
+
+		if err != nil {
+			handler.Formatter.JSON(w, http.StatusBadRequest, util.NewError("4006", "Could not get agent's payouts", err.Error()))
 			return
 		}
 
@@ -127,7 +137,9 @@ func (handler *TransactionHandler) CompletePayoutH(w http.ResponseWriter, req ht
 func (handler *TransactionHandler) GetTransactionByRefH(w http.ResponseWriter, req http.Request, params httprouter.Params) {
 	ref := params.ByName("reference")
 
-	if transaction, err := handler.TransService.GetTransactionByRef(ref); err != nil {
+	transaction, err := handler.TransService.GetTransactionByRef(ref);
+
+	if err != nil {
 		handler.Formatter(w, http.StatusBadRequest, util.NewError("4008", "Transaction retrieval failed", err.Error()))
 	}
 
